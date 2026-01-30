@@ -13,11 +13,69 @@ public class CGunFire : MonoBehaviour
     [Header("총알 시각 효과")]
     [SerializeField] private GameObject _bulletPrefab;
     [SerializeField] private Transform _firePoint;
+
+    [Header("총알 풀링 설정")]
+    [SerializeField] private int _poolSize = 30;
+    [SerializeField] private float _bulletLifeTime = 2.0f;
     #endregion
 
     #region 내부 변수
     private float _lastFireTime;
+
+    private Queue<GameObject> _pool = new Queue<GameObject>();
+    private List<GameObject> _aliveBullets = new List<GameObject>();
+    private Dictionary<GameObject, float> _lifeMap = new Dictionary<GameObject, float>();
     #endregion
+
+    void Awake()
+    {
+        if (_bulletPrefab == null)
+        {
+            CPrint.Warn("총알 프리팹 없음");
+        }
+    }
+
+    void Start()
+    {
+        for (int i = 0; i < _poolSize; i++)
+        {
+            GameObject bullet = Instantiate(_bulletPrefab);
+            bullet.SetActive(false);
+            bullet.transform.SetParent(null);
+            _pool.Enqueue(bullet);
+        }
+    }
+
+    void Update()
+    {
+        for (int i = _aliveBullets.Count - 1; i >= 0; i--)
+        {
+            GameObject b = _aliveBullets[i];
+
+            if (!b.activeSelf)
+            {
+                ReturnToPool(b);
+                _aliveBullets.RemoveAt(i);
+                if (_lifeMap.ContainsKey(b))
+                {
+                    _lifeMap.Remove(b);
+                }
+                continue;
+            }
+
+            if (_lifeMap.ContainsKey(b))
+            {
+                _lifeMap[b] -= Time.deltaTime;
+
+                if (_lifeMap[b] <= 0f)
+                {
+                    ReturnToPool(b);
+                    _aliveBullets.RemoveAt(i);
+                    _lifeMap.Remove(b);
+                }
+            }
+        }
+    }
 
     public bool TryFire(Camera playerCam)
     {
@@ -35,11 +93,66 @@ public class CGunFire : MonoBehaviour
     private void ProcessRaycast(Camera camera)
     {
         RaycastHit hit;
+        Vector3 targetPoint;
+
         // 화면 정중앙으로 레이 발사
         if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, _range))
         {
+            targetPoint = hit.point;
+
             CPrint.Log($"명중: {hit.transform.name} (데미지 {_damage})");
             // 데미지 처리 로직 추가 가능
         }
+        else
+        {
+            targetPoint = camera.transform.position + (camera.transform.forward * _range);
+        }
+
+        SpawnBullet(targetPoint);
+    }
+
+    private void SpawnBullet(Vector3 targetPos)
+    {
+        GameObject bullet = GetBulletFromPool();
+
+        bullet.transform.position = _firePoint.position;
+        bullet.transform.rotation = Quaternion.identity;
+        bullet.transform.LookAt(targetPos);
+    }
+
+    private GameObject GetBulletFromPool()
+    {
+        GameObject bullet = null;
+
+        if (_pool.Count > 0)
+        {
+            bullet = _pool.Dequeue();
+        }
+        else
+        {
+            bullet = Instantiate(_bulletPrefab);
+            bullet.transform.SetParent(null);
+        }
+
+        bullet.SetActive(true);
+
+        _aliveBullets.Add(bullet);
+
+        if (_lifeMap.ContainsKey(bullet))
+        {
+            _lifeMap[bullet] = _bulletLifeTime;
+        }
+        else
+        {
+            _lifeMap.Add(bullet, _bulletLifeTime);
+        }
+
+        return bullet;
+    }
+
+    private void ReturnToPool(GameObject bullet)
+    {
+        bullet.SetActive(false);
+        _pool.Enqueue(bullet);
     }
 }

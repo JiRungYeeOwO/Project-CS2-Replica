@@ -89,8 +89,105 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: -8679921383154817045, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
       insertIndex: -1
       addedObject: {fileID: 2588699903414215887}
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -2720638096724562836}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5762148654090057394}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -847940974175737072}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -5462273947069765336}
+    - targetCorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: -7096147759220278100}
   m_SourcePrefab: {fileID: 100100000, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+--- !u!1 &3718706717209867022 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 919132149155446097, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}
+  m_PrefabInstance: {fileID: 4565218317944098399}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &-2720638096724562836
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718706717209867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 280662068a7b220428530f56b3ea564e, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _gunFire: {fileID: 0}
+  _recoil: {fileID: 0}
+  _sound: {fileID: 0}
+  _particle: {fileID: 0}
+--- !u!114 &5762148654090057394
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718706717209867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 46ef4be8da0db514bbf552f09e7a3abe, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _damage: 20
+  _range: 100
+  _fireRate: 0.1
+  _bulletPrefab: {fileID: 2689608788211857286, guid: eefcf169c41e57d479c2dd7c0722950c, type: 3}
+  _firePoint: {fileID: 2588699903414215887}
+  _poolSize: 30
+  _bulletLifeTime: 2
+--- !u!114 &-847940974175737072
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718706717209867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 067caaf1f17fd2042aa1af51bcfdb3f7, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _modelTr: {fileID: 4093860718491167156}
+  _recoilDistance: -0.1
+  _recoverSpeed: 5
+--- !u!114 &-5462273947069765336
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718706717209867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 1e25fd210bca68e4ea781c537bade0eb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _audioSource: {fileID: 0}
+  _fireClip: {fileID: 0}
+--- !u!114 &-7096147759220278100
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3718706717209867022}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: c0b434b82f668ce4aad659b1ffd58931, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _muzzleFlash: {fileID: 0}
 --- !u!4 &4093860718491167156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}

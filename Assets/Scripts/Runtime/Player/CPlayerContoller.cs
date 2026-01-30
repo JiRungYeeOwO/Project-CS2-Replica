@@ -9,6 +9,9 @@ public class CPlayerContoller : MonoBehaviour
     [SerializeField] private Animator _animator;
     [SerializeField] private CharacterController _controller;
 
+    [Header("무기 회전")]
+    [SerializeField] private Transform _weaponPivot;
+
     [Header("카메라 기준 이동 (옵션)")]
     [SerializeField] private Transform _cameraTr;
 
@@ -96,6 +99,9 @@ public class CPlayerContoller : MonoBehaviour
     void Start()
     {
         _currentWeapon = GetComponentInChildren<IWeapon>();
+
+        Cursor.lockState = CursorLockMode.Locked;
+        Cursor.visible = false;
     }
 
     void Update()
@@ -108,20 +114,28 @@ public class CPlayerContoller : MonoBehaviour
         PlayerMove();
 
         TickWeaponInput();
+
+        if (Input.GetKeyDown(KeyCode.Escape))
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+        }
+
+        if (Input.GetMouseButtonDown(0))
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+        }
     }
 
     private void TickWeaponInput()
     {
-        // 무기가 없으면 리턴
         if (_currentWeapon == null) return;
 
-        // 마우스 좌클릭 (Fire1)
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && Cursor.visible == false)
         {
-            // 무기에게 "공격해!" 명령 (총알 발사는 무기가 알아서 함)
             if (_cameraTr != null)
             {
-                // 카메라는 아까 Awake에서 찾았거나 할당되어 있음
                 Camera cam = _cameraTr.GetComponent<Camera>();
                 if (cam == null) cam = Camera.main;
 
@@ -129,7 +143,6 @@ public class CPlayerContoller : MonoBehaviour
             }
         }
 
-        // 재장전 (R키)
         if (Input.GetKeyDown(KeyCode.R))
         {
             _currentWeapon.Reload();
@@ -206,14 +219,19 @@ public class CPlayerContoller : MonoBehaviour
         float playerYaw = Input.GetAxis("Mouse X");
         float playerPitch = Input.GetAxis("Mouse Y");
 
-        _lookYaw += playerYaw * _lookSensitiveYaw;
-        _lookPitch -= playerPitch * _lookSensitivePitch;
+        if (Cursor.visible == false)
+        {
+            _lookYaw += playerYaw * _lookSensitiveYaw;
+            _lookPitch -= playerPitch * _lookSensitivePitch;
 
-        _lookPitch = Mathf.Clamp(_lookPitch, _lookPitchMin, _lookPitchMax);
+            _lookPitch = Mathf.Clamp(_lookPitch, _lookPitchMin, _lookPitchMax);
 
-        transform.rotation = Quaternion.Euler(0f, _lookYaw, 0f);
+            transform.rotation = Quaternion.Euler(0f, _lookYaw, 0f);
 
-        _cameraTr.localRotation = Quaternion.Euler(_lookPitch, _lookYaw, 0f);
+            _cameraTr.localRotation = Quaternion.Euler(_lookPitch, _lookYaw, 0f);
+
+            _weaponPivot.localRotation = Quaternion.Euler(0f, 0f, -_lookPitch);
+        }
     }
 
     private bool TickJumpAndGravity(bool jumpKeyDown)

@@ -11,3 +11,7 @@
 *.sln
 
 /Assets/IgnoreAssets/
+
+# Plastic SCM 관련 파일 무시
+/[Aa]ssets/Plugins/Editor/PlasticSCM/
+.plastic/
