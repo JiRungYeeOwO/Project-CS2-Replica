@@ -39,6 +39,9 @@ public class CPlayerContoller : MonoBehaviour
 
     [Header("애니메이터 튜닝")]
     [SerializeField] private float _speedDamp = 0.12f;
+
+    [Header("메뉴 캔버스")]
+    [SerializeField] private GameObject _menuCanvas;
     #endregion
 
     #region 내부 변수
@@ -53,6 +56,8 @@ public class CPlayerContoller : MonoBehaviour
     private float _lookPitch;
 
     private IWeapon _currentWeapon;
+
+    private bool _isMenuOpen = false;
     #endregion
 
     private void Reset()
@@ -102,6 +107,11 @@ public class CPlayerContoller : MonoBehaviour
 
         Cursor.lockState = CursorLockMode.Locked;
         Cursor.visible = false;
+
+        if (_menuCanvas != null)
+        {
+            _menuCanvas.SetActive(false);
+        }
     }
 
     void Update()
@@ -115,16 +125,12 @@ public class CPlayerContoller : MonoBehaviour
 
         TickWeaponInput();
 
+
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            Cursor.lockState = CursorLockMode.None;
-            Cursor.visible = true;
-        }
+            _isMenuOpen = _isMenuOpen ? false : true;
 
-        if (Input.GetMouseButtonDown(0))
-        {
-            Cursor.lockState = CursorLockMode.Locked;
-            Cursor.visible = false;
+            ToggleMenu();
         }
     }
 
@@ -151,6 +157,8 @@ public class CPlayerContoller : MonoBehaviour
 
     private void PlayerMove()
     {
+        if (Cursor.visible == true) return;
+
         // 입력
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
@@ -268,4 +276,28 @@ public class CPlayerContoller : MonoBehaviour
 
         return jumped;
     }
+
+    private void ToggleMenu()
+    {
+        if (_isMenuOpen)
+        {
+            Cursor.lockState = CursorLockMode.None;
+            Cursor.visible = true;
+
+            if (_menuCanvas != null)
+            {
+                _menuCanvas.SetActive(true);
+            }
+        }
+        else
+        {
+            Cursor.lockState = CursorLockMode.Locked;
+            Cursor.visible = false;
+
+            if (_menuCanvas != null)
+            {
+                _menuCanvas.SetActive(false);
+            }
+        }
+    } // ToggleMenu()
 }
