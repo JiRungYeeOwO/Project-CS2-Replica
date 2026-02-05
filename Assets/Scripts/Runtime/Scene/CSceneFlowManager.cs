@@ -73,7 +73,7 @@ public class CSceneFlowManager : MonoBehaviour
             _transitionUI.Initialize();
         }
 
-        LoadScene(ESceneId.Title);
+        LoadSceneOnStart();
     }
 
     void Update()
@@ -107,6 +107,11 @@ public class CSceneFlowManager : MonoBehaviour
         // 못 찾았을 때 (안전 처리)
         _cursorIndex = 0;
         CPrint.Warn("커서 싱크 실패 : 현재 씬이 카탈로그 엔트리에 없다.");
+    }
+
+    public void LoadSceneOnStart()
+    {
+        SceneManager.LoadScene("TitleScene");
     }
 
     public void LoadScene(ESceneId id)

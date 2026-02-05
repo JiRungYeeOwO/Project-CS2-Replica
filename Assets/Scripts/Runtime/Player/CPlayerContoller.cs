@@ -112,6 +112,8 @@ public class CPlayerContoller : MonoBehaviour
         {
             _menuCanvas.SetActive(false);
         }
+
+        _lookYaw = transform.eulerAngles.y;
     }
 
     void Update()
