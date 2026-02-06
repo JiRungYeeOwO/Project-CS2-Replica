@@ -4,11 +4,16 @@ using UnityEngine;
 
 public class CGunFire : MonoBehaviour
 {
+    public int CurrentAmmo => _currentMagazine;
+    public int MaxAmmo => _magazineSize;
+    public bool IsReloading => _isReloading;
+
     #region 인스펙터
     [Header("총기 특징")]
     [SerializeField] private float _damage = 20f;
     [SerializeField] private float _range = 100f;
     [SerializeField] private float _fireRate = 0.1f; // 연사 속도
+    [SerializeField] private int _magazineSize = 30;
 
     [Header("총알 시각 효과")]
     [SerializeField] private GameObject _bulletPrefab;
@@ -17,6 +22,9 @@ public class CGunFire : MonoBehaviour
     [Header("총알 풀링 설정")]
     [SerializeField] private int _poolSize = 30;
     [SerializeField] private float _bulletLifeTime = 2.0f;
+
+    [Header("재장전 설정")]
+    [SerializeField] private float _reloadTime = 1.5f;
     #endregion
 
     #region 내부 변수
@@ -25,6 +33,10 @@ public class CGunFire : MonoBehaviour
     private Queue<GameObject> _pool = new Queue<GameObject>();
     private List<GameObject> _aliveBullets = new List<GameObject>();
     private Dictionary<GameObject, float> _lifeMap = new Dictionary<GameObject, float>();
+
+    private int _currentMagazine;
+    private bool _isReloading = false;
+    private WaitForSeconds _reloadingTime;
     #endregion
 
     void Awake()
@@ -44,6 +56,12 @@ public class CGunFire : MonoBehaviour
             bullet.transform.SetParent(null);
             _pool.Enqueue(bullet);
         }
+
+        CGameData.ResetData();
+
+        _currentMagazine = _magazineSize;
+
+        _reloadingTime = new WaitForSeconds(_reloadTime);
     }
 
     void Update()
@@ -77,13 +95,38 @@ public class CGunFire : MonoBehaviour
         }
     }
 
+    public void Reload()
+    {
+        if (_isReloading || _currentMagazine >= _magazineSize)
+            return;
+
+        StartCoroutine(Co_ReloadRoutine());
+    }
+
+    private IEnumerator Co_ReloadRoutine()
+    {
+        _isReloading = true;
+        CPrint.Log("재장전 시작");
+        yield return _reloadingTime;
+        _currentMagazine = _magazineSize;
+        CPrint.Log("재장전 완료");
+        _isReloading = false;
+    }
+
     public bool TryFire(Camera playerCam)
     {
         // 쿨타임 체크
         if (Time.time < _lastFireTime + _fireRate)
             return false;
 
+        if (_currentMagazine <= 0)
+            return false;
+
         _lastFireTime = Time.time;
+
+        _currentMagazine--;
+
+        CGameData.FireBulletCount++;
 
         // 실제 발사 로직
         ProcessRaycast(playerCam);

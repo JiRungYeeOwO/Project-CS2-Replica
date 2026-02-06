@@ -19,7 +19,7 @@ public class CButtonSystem : MonoBehaviour
     [SerializeField] private Button _quitButton;
     #endregion
 
-    void Start()
+    void Awake()
     {
         if (_startButton != null)
         {

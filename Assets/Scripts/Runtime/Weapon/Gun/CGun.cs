@@ -29,7 +29,10 @@ public class CGun : MonoBehaviour,IWeapon
 
     public void Reload()
     {
-        CPrint.Log("재장전");
+        if (_gunFire != null)
+        {
+            _gunFire.Reload();
+        }
     }
 
     private void OnFireSuccess()
