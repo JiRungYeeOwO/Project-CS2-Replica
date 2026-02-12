@@ -142,10 +142,15 @@ MonoBehaviour:
   _damage: 20
   _range: 100
   _fireRate: 0.1
+  _magazineSize: 30
   _bulletPrefab: {fileID: 2689608788211857286, guid: eefcf169c41e57d479c2dd7c0722950c, type: 3}
   _firePoint: {fileID: 2588699903414215887}
   _poolSize: 30
   _bulletLifeTime: 2
+  _reloadTime: 1.5
+  _hitLayer:
+    serializedVersion: 2
+    m_Bits: 65
 --- !u!114 &-847940974175737072
 MonoBehaviour:
   m_ObjectHideFlags: 0

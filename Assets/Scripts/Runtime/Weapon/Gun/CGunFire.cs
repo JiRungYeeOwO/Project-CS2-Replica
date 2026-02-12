@@ -25,6 +25,9 @@ public class CGunFire : MonoBehaviour
 
     [Header("재장전 설정")]
     [SerializeField] private float _reloadTime = 1.5f;
+
+    [Header("충돌 설정")]
+    [SerializeField] private LayerMask _hitLayer;
     #endregion
 
     #region 내부 변수
@@ -139,12 +142,18 @@ public class CGunFire : MonoBehaviour
         Vector3 targetPoint;
 
         // 화면 정중앙으로 레이 발사
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, _range))
+        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, _range, _hitLayer))
         {
             targetPoint = hit.point;
 
-            CPrint.Log($"명중: {hit.transform.name} (데미지 {_damage})");
-            // 데미지 처리 로직 추가 가능
+            IHit target = hit.collider.GetComponent<IHit>();
+
+            CPrint.Log($"맞은 부위: {hit.collider.name} / 레이어: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
+
+            if (target != null)
+            {
+                target.ApplyDamage(_damage);
+            }
         }
         else
         {
