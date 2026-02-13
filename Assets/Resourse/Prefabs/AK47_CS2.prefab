@@ -179,7 +179,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _audioSource: {fileID: 0}
-  _fireClip: {fileID: 0}
+  _fireClip: {fileID: 8300000, guid: 6dd7024f00606b44eb5884197a66a893, type: 3}
+  _reloadClip: {fileID: 8300000, guid: 499b359dc8e2dce47b86d7445e4f11f9, type: 3}
+  _volume: 0.095
+  _randomPitch: 1
+  _pitchRange: {x: 0.95, y: 1.05}
 --- !u!114 &-7096147759220278100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -192,7 +196,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c0b434b82f668ce4aad659b1ffd58931, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _muzzleFlash: {fileID: 0}
+  _particlePrefab: {fileID: 1000010254994808, guid: 9defeac88977c0d448aa4541073ee9e4, type: 3}
+  _destroyDelay: 2
+  _firePoint: {fileID: 2588699903414215887}
+  _useMuzzleRotation: 1
 --- !u!4 &4093860718491167156 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 34ca20bace438404d8291a1ef07b7a8f, type: 3}

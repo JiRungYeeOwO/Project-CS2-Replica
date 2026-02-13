@@ -24,6 +24,8 @@ public class CEnemySpawner : MonoBehaviour
         }
 
         SpawnEnemies();
+
+        CGameData.RemainEnemyCount = CGameData.SpawnEnemyCount;
     }
 
     private void SpawnEnemies()
@@ -40,6 +42,8 @@ public class CEnemySpawner : MonoBehaviour
             Instantiate(_enemyPrefab, usedPoint.position, usedPoint.rotation);
 
             usablePoints.RemoveAt(randomIndex);
+
+            CGameData.SpawnEnemyCount++;
         }
 
     }

@@ -32,6 +32,7 @@ public class CGun : MonoBehaviour,IWeapon
         if (_gunFire != null)
         {
             _gunFire.Reload();
+            if (_sound != null) _sound.PlayReloadSound();
         }
     }
 

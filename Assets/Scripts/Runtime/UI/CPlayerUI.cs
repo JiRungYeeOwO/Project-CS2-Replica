@@ -8,6 +8,11 @@ public class CPlayerUI : MonoBehaviour
     #region 인스펙터
     [Header("탄창 Text 연결")]
     [SerializeField] private TMP_Text _magazine;
+
+    [Header("Info 패널")]
+    [SerializeField] private TMP_Text _enemyInfo;
+    [SerializeField] private TMP_Text _killCount;
+    [SerializeField] private TMP_Text _fireCount;
     #endregion
 
     #region 내부 변수
@@ -42,6 +47,21 @@ public class CPlayerUI : MonoBehaviour
         {
             _magazine.color = Color.white;
             _magazine.text = $"{_targetGun.CurrentAmmo} / {_targetGun.MaxAmmo}";
+        }
+
+        if (_enemyInfo != null)
+        {
+            _enemyInfo.text = $"Enemys :{CGameData.RemainEnemyCount} / {CGameData.SpawnEnemyCount}";
+        }
+
+        if (_killCount != null)
+        {
+            _killCount.text = $"Fire Count : {CGameData.FireBulletCount}";
+        }
+
+        if (_fireCount != null)
+        {
+            _fireCount.text = $"Fire Count : {CGameData.FireBulletCount}";
         }
     }
 }

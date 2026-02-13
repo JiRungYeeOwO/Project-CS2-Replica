@@ -48,6 +48,8 @@ public class CButtonSystem : MonoBehaviour
         {
             CSceneFlowManager.Instance.LoadScene(ESceneId.Game);
         }
+
+        CGameData.ResetData();
     }
 
     private void OnClickTitle()
@@ -56,6 +58,8 @@ public class CButtonSystem : MonoBehaviour
         {
             CSceneFlowManager.Instance.LoadScene(ESceneId.Title);
         }
+
+        CGameData.ResetData();
     }
 
     private void OnClickResult()

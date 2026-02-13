@@ -40,8 +40,9 @@ public class CPlayerContoller : MonoBehaviour
     [Header("애니메이터 튜닝")]
     [SerializeField] private float _speedDamp = 0.12f;
 
-    [Header("메뉴 캔버스")]
+    [Header("UI 관련")]
     [SerializeField] private GameObject _menuCanvas;
+    [SerializeField] private GameObject _infoPanel;
     #endregion
 
     #region 내부 변수
@@ -113,6 +114,11 @@ public class CPlayerContoller : MonoBehaviour
             _menuCanvas.SetActive(false);
         }
 
+        if (_infoPanel != null)
+        {
+            _infoPanel.SetActive(false);
+        }
+
         _lookYaw = transform.eulerAngles.y;
     }
 
@@ -127,13 +133,14 @@ public class CPlayerContoller : MonoBehaviour
 
         TickWeaponInput();
 
-
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             _isMenuOpen = _isMenuOpen ? false : true;
 
             ToggleMenu();
         }
+
+        ViewGameInfo();
     }
 
     private void TickWeaponInput()
@@ -248,11 +255,8 @@ public class CPlayerContoller : MonoBehaviour
     {
         bool jumped = false;
 
-        // isGrounded : 컨트롤러가 바닥에 바닥에 닿아있다고 판단하는 상태
-        //  ㄴ 바닥 경사 / 턱 / 틈(!)에서 t / f 가 흔들릴 수 있다
         if (_controller.isGrounded)
         {
-            // 바닥에 붙어 있으면 → y속도가 음수면 너무 떨어지지 않게 고정
             if (_verticalVel < 0.0f)
             {
                 _verticalVel = _groundStick;
@@ -260,14 +264,6 @@ public class CPlayerContoller : MonoBehaviour
 
             if (jumpKeyDown)
             {
-                // 점프 → 원하는 높이(h)에서 속도가 0이 되도록 → 시작 속도(v)를 역으로 계산한다.
-
-                // v = Sqrt(h * -2g)
-                // -9.81
-                // _verticalVel += g * dt 중력기 적용된다.
-
-                // - 등가속도 운동
-
                 _verticalVel = Mathf.Sqrt(_jumpHeight * -2.0f * _gravity);
 
                 jumped = true;
@@ -281,6 +277,12 @@ public class CPlayerContoller : MonoBehaviour
 
     private void ToggleMenu()
     {
+        if (_menuCanvas == null)
+        {
+            CPrint.Warn("MenuCanvas 없음, 인스펙터 확인");
+            return;
+        }
+
         if (_isMenuOpen)
         {
             Cursor.lockState = CursorLockMode.None;
@@ -302,4 +304,22 @@ public class CPlayerContoller : MonoBehaviour
             }
         }
     } // ToggleMenu()
+
+    private void ViewGameInfo()
+    {
+        if (_infoPanel == null)
+        {
+            CPrint.Warn("InfoPanel 없음, 인스펙터 확인");
+            return;
+        }
+
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
+            _infoPanel.SetActive(true);
+        }
+        else if (Input.GetKeyUp(KeyCode.Tab))
+        {
+            _infoPanel.SetActive(false);
+        }
+    } // ViewGameInfo()
 }
