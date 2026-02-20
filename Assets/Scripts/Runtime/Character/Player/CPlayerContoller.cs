@@ -36,6 +36,7 @@ public class CPlayerContoller : MonoBehaviour
     [SerializeField] private string _paramSpeed = "aSpeed";
     [SerializeField] private string _paramRun = "bRun";
     [SerializeField] private string _paramJump = "tJump";
+    [SerializeField] private string _paramGround = "bIsGrounded";
 
     [Header("애니메이터 튜닝")]
     [SerializeField] private float _speedDamp = 0.12f;
@@ -43,15 +44,25 @@ public class CPlayerContoller : MonoBehaviour
     [Header("UI 관련")]
     [SerializeField] private GameObject _menuCanvas;
     [SerializeField] private GameObject _infoPanel;
+
+    [Header("소리 옵션")]
+    [SerializeField] private AudioSource _audioSource;
+    [SerializeField] private AudioClip _footstepClip;
+    [SerializeField] private AudioClip _jumpClip;
+    [SerializeField] private AudioClip _landingClip;
+    [SerializeField, Range(0f, 1f)] private float _volume = 1.0f;
     #endregion
 
     #region 내부 변수
     private float _verticalVel;
+    private bool _wasGrounded;
     private int _hashSpeed;
     private int _hashRun;
     private int _hashJump;
+    private int _hashGround;
     private bool _hasRunParam;
     private bool _hasJumpParam;
+    private bool _hasGroundParam;
 
     private float _lookYaw;
     private float _lookPitch;
@@ -86,7 +97,6 @@ public class CPlayerContoller : MonoBehaviour
 
         _hashSpeed = Animator.StringToHash(_paramSpeed);
 
-        // 파라미터가 비어있으면 → 사용하지 않겠다.
         _hasRunParam = !string.IsNullOrEmpty(_paramRun);
         if (_hasRunParam)
         {
@@ -99,7 +109,21 @@ public class CPlayerContoller : MonoBehaviour
             _hashJump = Animator.StringToHash(_paramJump);
         }
 
-        // 문자열 → 해시로 바꿔서 캐싱
+        _hasGroundParam = !string.IsNullOrEmpty(_paramGround);
+        if (_hasGroundParam)
+        {
+            _hashGround = Animator.StringToHash(_paramGround);
+        }
+
+        if (_audioSource == null)
+        {
+            _audioSource = GetComponent<AudioSource>();
+
+            if (_audioSource == null)
+            {
+                _audioSource = gameObject.AddComponent<AudioSource>();
+            }
+        }
     }
 
     void Start()
@@ -168,40 +192,37 @@ public class CPlayerContoller : MonoBehaviour
     {
         if (Cursor.visible == true) return;
 
-        // 입력
         float h = Input.GetAxisRaw("Horizontal");
         float v = Input.GetAxisRaw("Vertical");
         Vector3 input = new Vector3(h, 0, v);
 
-        // ClampMagnitude : 벡터 크기 제한
-        // 대각선 이동이 더 빠르지 않게 0 ~ 1로 정규화
         input = Vector3.ClampMagnitude(input, 1.0f);
 
         bool isRunKey = Input.GetKey(KeyCode.LeftShift) || Input.GetKey(KeyCode.RightShift);
         bool jumpKeyDown = Input.GetKeyDown(KeyCode.Space);
 
-        // 이동 방향
-        // 입력이 거의 없으면 → zero처리
         Vector3 moveDir = (input.sqrMagnitude > 0.0001f) ? BuildMoveDirection(input) : Vector3.zero;
 
-        // 속도 (달리기)
         float speed = _walkSpeed * (isRunKey ? _runMultiplier : 1.0f);
-
-        // 점프 + 중력 (점프가 이번 프레임에 시작됐는지 반환)
         bool jumpedThisFrame = TickJumpAndGravity(jumpKeyDown);
 
         if (_hasJumpParam && jumpedThisFrame)
         {
             _animator.SetTrigger(_hashJump);
+            PlayJumpSound();
         }
 
-        // 이동
-        //  ㄴ 수평 이동 + 수직 속도를 합쳐서 → Move
-        Vector3 velocity = moveDir * speed;
+        _wasGrounded = _controller.isGrounded;
 
+        Vector3 velocity = moveDir * speed;
         velocity.y = _verticalVel;
 
         _controller.Move(velocity * Time.deltaTime);
+
+        if (!_wasGrounded && _controller.isGrounded)
+        {
+            PlayLandingSound();
+        }
 
         float speed01 = moveDir.magnitude * (isRunKey ? 1.0f : 0.5f);
 
@@ -210,6 +231,11 @@ public class CPlayerContoller : MonoBehaviour
         if (_hasRunParam)
         {
             _animator.SetBool(_hashRun, isRunKey && moveDir.sqrMagnitude > 0.0001f);
+        }
+
+        if (_hasGroundParam)
+        {
+            _animator.SetBool(_hashGround, _controller.isGrounded);
         }
     }
 
@@ -220,12 +246,9 @@ public class CPlayerContoller : MonoBehaviour
             return input.normalized;
         }
 
-        // 카메라 → f / r → 바닥 평면 투영 → 바닥 평면 (X, Z)
-        //   ㄴ 카메라가 위를 보고 있어도 (기울어져 있어도) 캐릭터는 땅 위로만 움직이게 하기 위해
         Vector3 camF = Vector3.ProjectOnPlane(_cameraTr.forward, Vector3.up).normalized;
         Vector3 camR = Vector3.ProjectOnPlane(_cameraTr.right, Vector3.up).normalized;
 
-        // 카메라 기준으로 입력 방향 합성 → 최종 이동 방향 (dir)
         Vector3 dir = camF * input.z + camR * input.x;
 
         return dir.normalized;
@@ -249,6 +272,41 @@ public class CPlayerContoller : MonoBehaviour
 
             _weaponPivot.localRotation = Quaternion.Euler(0f, 0f, -_lookPitch);
         }
+    }
+
+    public void PlayRunSound()
+    {
+        if (_footstepClip == null)
+        {
+            CPrint.Warn("FootstepClip 비어있다. / 인스펙터 확인");
+            return;
+        }
+
+        if (_controller != null && !_controller.isGrounded) return;
+
+        _audioSource.PlayOneShot(_footstepClip, _volume);
+    }
+
+    private void PlayJumpSound()
+    {
+        if (_jumpClip == null)
+        {
+            CPrint.Warn("JumpClip 비어있다. / 인스펙터 확인");
+            return;
+        }
+
+        _audioSource.PlayOneShot(_jumpClip, _volume);
+    }
+
+    private void PlayLandingSound()
+    {
+        if (_landingClip == null)
+        {
+            CPrint.Warn("LandingClip 비어있다. / 인스펙터 확인");
+            return;
+        }
+
+        _audioSource.PlayOneShot(_landingClip, _volume);
     }
 
     private bool TickJumpAndGravity(bool jumpKeyDown)

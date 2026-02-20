@@ -14,6 +14,11 @@ public class CEnemySpawner : MonoBehaviour
     private int _spawnCount;
     #endregion
 
+    void Awake()
+    {
+        CGameData.ResetData();
+    }
+
     void Start()
     {
         _spawnCount = Random.Range(4, 8);
@@ -24,8 +29,6 @@ public class CEnemySpawner : MonoBehaviour
         }
 
         SpawnEnemies();
-
-        CGameData.RemainEnemyCount = CGameData.SpawnEnemyCount;
     }
 
     private void SpawnEnemies()
@@ -44,7 +47,7 @@ public class CEnemySpawner : MonoBehaviour
             usablePoints.RemoveAt(randomIndex);
 
             CGameData.SpawnEnemyCount++;
+            CGameData.RemainEnemyCount++;
         }
-
     }
 }

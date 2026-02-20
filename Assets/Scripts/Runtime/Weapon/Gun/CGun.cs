@@ -8,6 +8,9 @@ public class CGun : MonoBehaviour,IWeapon
     [SerializeField] private CGunRecoil _recoil;
     [SerializeField] private CGunSound _sound;
     [SerializeField] private CGunParticle _particle;
+
+    [Header("적 설정")]
+    [SerializeField] private bool _isInfiniteAmmo = false;
     #endregion
 
     void Awake()
@@ -20,11 +23,29 @@ public class CGun : MonoBehaviour,IWeapon
 
     public void Attack(Camera playerCam)
     {
-        if (_gunFire != null && _gunFire.TryFire(playerCam))
+        if (_gunFire != null && _gunFire.TryFire(playerCam, _isInfiniteAmmo))
         {
-            // 발사 성공 시, 다른 부품들에게도 일하라고 명령 (이벤트 전파)
             OnFireSuccess();
         }
+    }
+    
+    public bool Attack(Vector3 targetPosition)
+    {
+        if (_gunFire == null) return false;
+
+        Vector3 origin = _gunFire.transform.position;
+
+        Vector3 direction = (targetPosition - origin).normalized;
+
+        Debug.DrawRay(origin, direction * 100f, Color.red, 1.0f);
+
+        if (_gunFire.TryFire(origin, direction, _isInfiniteAmmo))
+        {
+            OnFireSuccess();
+            return true;
+        }
+
+        return false;
     }
 
     public void Reload()
@@ -40,6 +61,6 @@ public class CGun : MonoBehaviour,IWeapon
     {
         if (_recoil != null) _recoil.PlayRecoil(); // 반동 실행
         if (_sound != null) _sound.PlayFireSound(); // 소리 재생
-        if (_particle != null) _particle.PlayMuzzleFlash();   // 이펙트 재생
+        if (_particle != null) _particle.PlayMuzzleFlash(); // 이펙트 재생
     }
 }

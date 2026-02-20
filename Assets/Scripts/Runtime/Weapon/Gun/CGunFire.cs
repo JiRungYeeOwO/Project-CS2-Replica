@@ -48,6 +48,7 @@ public class CGunFire : MonoBehaviour
         {
             CPrint.Warn("총알 프리팹 없음");
         }
+
     }
 
     void Start()
@@ -59,8 +60,6 @@ public class CGunFire : MonoBehaviour
             bullet.transform.SetParent(null);
             _pool.Enqueue(bullet);
         }
-
-        CGameData.ResetData();
 
         _currentMagazine = _magazineSize;
 
@@ -116,18 +115,18 @@ public class CGunFire : MonoBehaviour
         _isReloading = false;
     }
 
-    public bool TryFire(Camera playerCam)
+    public bool TryFire(Camera playerCam, bool isInfiniteAmmo = false)
     {
         // 쿨타임 체크
         if (Time.time < _lastFireTime + _fireRate)
             return false;
 
-        if (_currentMagazine <= 0)
+        if (!isInfiniteAmmo && _currentMagazine <= 0)
             return false;
 
         _lastFireTime = Time.time;
 
-        _currentMagazine--;
+        if (!isInfiniteAmmo) _currentMagazine--;
 
         CGameData.FireBulletCount++;
 
@@ -136,19 +135,37 @@ public class CGunFire : MonoBehaviour
         return true;
     }
 
-    private void ProcessRaycast(Camera camera)
+    public bool TryFire(Vector3 origin, Vector3 direction, bool isInfiniteAmmo = true)
+    {
+        if (Time.time < _lastFireTime + _fireRate) return false;
+
+        _lastFireTime = Time.time;
+
+        if (!isInfiniteAmmo) _currentMagazine--;
+
+        ProcessRaycast(origin, direction);
+        return true;
+    }
+
+    private void ProcessRaycast(Camera camera) // 플레이어
+    {
+        FireRaycast(camera.transform.position, camera.transform.forward);
+    }
+
+    private void ProcessRaycast(Vector3 origin, Vector3 direction) // 적
+    {
+        FireRaycast(origin, direction);
+    }
+
+    private void FireRaycast(Vector3 origin, Vector3 direction)
     {
         RaycastHit hit;
         Vector3 targetPoint;
 
-        // 화면 정중앙으로 레이 발사
-        if (Physics.Raycast(camera.transform.position, camera.transform.forward, out hit, _range, _hitLayer))
+        if (Physics.Raycast(origin, direction, out hit, _range, _hitLayer))
         {
             targetPoint = hit.point;
-
             IHit target = hit.collider.GetComponent<IHit>();
-
-            CPrint.Log($"맞은 부위: {hit.collider.name} / 레이어: {LayerMask.LayerToName(hit.collider.gameObject.layer)}");
 
             if (target != null)
             {
@@ -157,7 +174,7 @@ public class CGunFire : MonoBehaviour
         }
         else
         {
-            targetPoint = camera.transform.position + (camera.transform.forward * _range);
+            targetPoint = origin + (direction * _range);
         }
 
         SpawnBullet(targetPoint);

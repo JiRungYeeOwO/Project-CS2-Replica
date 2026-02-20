@@ -3,57 +3,7 @@ guid: 25f9b4e5ace52884094a1ab792669ff0
 ModelImporter:
   serializedVersion: 22200
   internalIDToNameTable: []
-  externalObjects:
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Osiris
-    second: {fileID: 2100000, guid: 8c788681719f1a04d9676655e07bb2ef, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: Osiris.001
-    second: {fileID: 2100000, guid: a8e51f215438edd4a8cd34c4ad39059e, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: t_base_fingerless_glove.001
-    second: {fileID: 2100000, guid: 5f01370cc2b5f374d982348d09c9082d, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: t_base_fingerless_glove.002
-    second: {fileID: 2100000, guid: 0ae1938013b6f494482ace19f7190971, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: t_base_fingerless_glove.003
-    second: {fileID: 2100000, guid: 3d383cbbc523b6844bdaa0f90797f710, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: t_base_fingerless_glove.004
-    second: {fileID: 2100000, guid: 7ef8bd52122111b47a20ca946ddbc45f, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tm_elite_head_variantE.001
-    second: {fileID: 2100000, guid: 82a27ea178d18a04ab9103a1dbae9687, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: tm_elite_head_variantE.002
-    second: {fileID: 2100000, guid: 5558581399862f444865b76f98109632, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: w_model_leet_arms_133.001
-    second: {fileID: 2100000, guid: 36cdfab1a1c9166428dfa01647efe860, type: 2}
-  - first:
-      type: UnityEngine:Material
-      assembly: UnityEngine.CoreModule
-      name: w_model_leet_arms_133.003
-    second: {fileID: 2100000, guid: 8a9591a36c73e844ba455c6e66efed09, type: 2}
+  externalObjects: {}
   materials:
     materialImportMode: 2
     materialName: 0
@@ -121,8 +71,8 @@ ModelImporter:
     strictVertexDataChecks: 0
   tangentSpace:
     normalSmoothAngle: 60
-    normalImportMode: 0
-    tangentImportMode: 3
+    normalImportMode: 1
+    tangentImportMode: 4
     normalCalculationMode: 4
     legacyComputeAllNormalsFromSmoothingGroupsWhenMeshHasBlendShapes: 0
     blendShapeNormalImportMode: 1

@@ -34,19 +34,15 @@ public class CSceneTransitionUI : MonoBehaviour
             return;
         }
 
-        // 화면 밝음 / 클릭 막지 않겠다.
 
-        // FadeIn 완료 상태
         _fadeGroup.alpha = 0.0f;
         _fadeGroup.blocksRaycasts = false;
-        // 버튼 같은 것들이 들어간다.
         _fadeGroup.interactable = false;
 
         SetLoadingText("");
         CPrint.Log("Initialize 완료");
     }
 
-    // 로딩 문구를 바꾸는 함수
     public void SetLoadingText(string msg)
     {
         if (_loadingTMP != null)
@@ -60,10 +56,8 @@ public class CSceneTransitionUI : MonoBehaviour
         }
     }
 
-    // 외부에서 호출하는 페이드 코루틴
     public IEnumerator Co_FadeTo(float targetAlpha, float duration = -1f, bool blockRayCastsWhileFading = true)
     {
-        // targetAlpha : 최종 투명도 / duration : 페이드 시간 / blockRayCastsWhileFading : 페이드 진행 중 입력을 막을지 말지
 
         if (_fadeGroup == null)
         {
@@ -89,7 +83,6 @@ public class CSceneTransitionUI : MonoBehaviour
         _fadeRoutine = null;
     }
 
-    // alpha를 시간에 따라 변경하는 코루틴 (내부용)
     private IEnumerator Co_Fade_Internal(float targetAlpha, float duration, bool blockRayCastsWhileFading)
     {
         float startAlpha = _fadeGroup.alpha;
@@ -98,41 +91,32 @@ public class CSceneTransitionUI : MonoBehaviour
 
         _fadeGroup.interactable = false;
 
-        // 0 → 즉시 전환 → 보간을 수행하지 않는다.
         if (duration <= 0f)
         {
             _fadeGroup.alpha = targetAlpha;
 
-            // 완전 어두울때만 입력을 막겠다.
             _fadeGroup.blocksRaycasts = (targetAlpha >= 0.99f);
 
             yield break;
         }
 
-        // 누적 시간
         float t = 0;
 
         while (t < duration)
         {
-            // deltaTime : 타임 스케일 영향을 받는다.
-            // unscaledDeltaTime : 타임 스케일 영향을 받지 안흔다. (무시)
             float dt = _useUnscaledTime ? Time.unscaledDeltaTime : Time.deltaTime;
 
-            // 경과 시간 누적
             t += dt;
 
-            // Clamp01 : 주어진 값이 0과 1 사이에 있는지 확인 → 벗어나면 최소값인 0 또는 최대겂인 1로 반환
             float lerp = Mathf.Clamp01(t / duration);
 
             _fadeGroup.alpha = Mathf.Lerp(startAlpha, targetAlpha, lerp);
 
-            // 다음 프레임까지 대기
             yield return null;
         }
 
         _fadeGroup.alpha = targetAlpha;
 
-        // 0 (밝은 상태) / 1 (어두운 상태)
         _fadeGroup.blocksRaycasts = (targetAlpha >= 0.99f);
     }
 }

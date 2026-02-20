@@ -6,8 +6,10 @@ using UnityEngine;
 public class CPlayerUI : MonoBehaviour
 {
     #region 인스펙터
-    [Header("탄창 Text 연결")]
+    [Header("게임 정보 Text 연결")]
     [SerializeField] private TMP_Text _magazine;
+    [SerializeField] private TMP_Text _playerHP;
+    [SerializeField] private TMP_Text _remainTime;
 
     [Header("Info 패널")]
     [SerializeField] private TMP_Text _enemyInfo;
@@ -17,6 +19,9 @@ public class CPlayerUI : MonoBehaviour
 
     #region 내부 변수
     private CGunFire _targetGun;
+    private CCharacterHealth _hpInfo;
+    private CGameFlowManager _flowManager;
+
     #endregion
 
     void Start()
@@ -25,43 +30,73 @@ public class CPlayerUI : MonoBehaviour
 
         if (player != null)
         {
+            _hpInfo = player.GetComponentInChildren<CCharacterHealth>();
             _targetGun = player.GetComponentInChildren<CGunFire>();
         }
         else
         {
             CPrint.Error("CPlayerUI : Player 태그 없음");
         }
+
+        _flowManager = CGameFlowManager.Instance;
     }
 
     void Update()
     {
-        if (_targetGun == null || _magazine == null)
+        if (_flowManager == null)
+        {
+            _flowManager = CGameFlowManager.Instance;
             return;
-
-        if (_targetGun.IsReloading)
-        {
-            _magazine.text = "Reloading..";
-            _magazine.color = Color.yellow;
         }
-        else
+
+        if (_hpInfo != null && _playerHP != null)
         {
-            _magazine.color = Color.white;
-            _magazine.text = $"{_targetGun.CurrentAmmo} / {_targetGun.MaxAmmo}";
+            if (_hpInfo.CurrentHealth > 0)
+            {
+            _playerHP.text = $"HP : {_hpInfo.CurrentHealth}";
+            _playerHP.fontStyle = FontStyles.Bold;
+            }
+            else
+            {
+                _playerHP.text = $"HP : 0";
+                _playerHP.color = Color.red;
+                _playerHP.fontStyle = FontStyles.Bold;
+            }
+        }
+
+        if (_targetGun != null && _magazine != null)
+        {
+            if (_targetGun.IsReloading)
+            {
+                _magazine.text = "Reloading..";
+                _magazine.color = Color.yellow;
+            }
+            else
+            {
+                _magazine.color = Color.white;
+                _magazine.text = $"{_targetGun.CurrentAmmo} / {_targetGun.MaxAmmo}";
+            }
         }
 
         if (_enemyInfo != null)
         {
-            _enemyInfo.text = $"Enemys :{CGameData.RemainEnemyCount} / {CGameData.SpawnEnemyCount}";
+            _enemyInfo.text = $"남은 적 :{CGameData.RemainEnemyCount} / {CGameData.SpawnEnemyCount}";
         }
 
         if (_killCount != null)
         {
-            _killCount.text = $"Fire Count : {CGameData.FireBulletCount}";
+            _killCount.text = $"킬 : {CGameData.KillCount}";
         }
 
         if (_fireCount != null)
         {
-            _fireCount.text = $"Fire Count : {CGameData.FireBulletCount}";
+            _fireCount.text = $"발사 횟수 : {CGameData.FireBulletCount}";
+        }
+
+        if (_remainTime != null)
+        {
+            float time = _flowManager.CurrentTime;
+            _remainTime.text = $"{time:F2}";
         }
     }
 }

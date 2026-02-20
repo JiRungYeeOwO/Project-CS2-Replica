@@ -4,6 +4,7 @@
     public static int SpawnEnemyCount = 0;
     public static int RemainEnemyCount = 0;
     public static int KillCount = 0;
+    public static string GameResultString;
 
     public static void ResetData()
     {
@@ -11,5 +12,6 @@
         SpawnEnemyCount = 0;
         RemainEnemyCount = 0;
         KillCount = 0;
+        GameResultString = null;
     }
 }

@@ -127,6 +127,7 @@ MonoBehaviour:
   _recoil: {fileID: 0}
   _sound: {fileID: 0}
   _particle: {fileID: 0}
+  _isInfiniteAmmo: 0
 --- !u!114 &5762148654090057394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -139,7 +140,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46ef4be8da0db514bbf552f09e7a3abe, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _damage: 20
+  _damage: 25
   _range: 100
   _fireRate: 0.1
   _magazineSize: 30
