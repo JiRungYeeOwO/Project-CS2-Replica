@@ -2,7 +2,7 @@
 > **CS2(Counter-Strike 2)를 레퍼런스로 한 90초 타임 어택 FPS 시스템 모작**
 
 ## 📺 프로젝트 자료 및 영상
-* **상세 발표 자료 (Google Drive)**: [미니프로젝트_김승원.pptx 바로가기](https://docs.google.com/presentation/d/1j5Di-CkP02YThjiQ7nPpfkwEprKaWgPj/edit?usp=sharing&ouid=113630341990529298262&rtpof=true&sd=true) 
+* **상세 발표 자료 (Google Drive)**: [미니프로젝트_김승원.pptx](https://docs.google.com/presentation/d/1j5Di-CkP02YThjiQ7nPpfkwEprKaWgPj/edit?usp=sharing&ouid=113630341990529298262&rtpof=true&sd=true) 
 * **시연 영상**:
 
 [![Strike_90_Demo](http://img.youtube.com/vi/vxjFW06ClMk/0.jpg)](https://www.youtube.com/watch?v=vxjFW06ClMk)
@@ -12,7 +12,7 @@
 ---
 
 ## 🏗️ 시스템 설계 및 기술적 특징
-본 프로젝트는 **확장 가능한 무기 시스템**과 **객체 간 결합도 완화**를 목표로 설계되었습니다. 자세한 내용은 상단의 **발표 자료(PPTX)**를 확인해 주세요.
+본 프로젝트는 **확장 가능한 무기 시스템**과 **객체 간 결합도 완화**를 목표로 설계되었습니다. 자세한 내용은 상단의 **발표 자료**를 확인해 주세요.
 
 ### 1. 계층형 아키텍처 (Layered Architecture)
 - **Manager Layer**: 게임 흐름 및 전체 시스템 통제
