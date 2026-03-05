@@ -2,8 +2,11 @@
 > **CS2(Counter-Strike 2)를 레퍼런스로 한 90초 타임 어택 FPS 시스템 모작**
 
 ## 📺 프로젝트 자료 및 영상
-* [cite_start]**상세 발표 자료 (Google Drive)**: [미니프로젝트_김승원.pptx 바로가기](https://drive.google.com/open?id=1j5Di-CkP02YThjiQ7nPpfkwEprKaWgPj) 
-* **시연 영상 (YouTube)**: [![Strike_90_Demo](http://img.youtube.com/vi/유튜브_영상_아이디/0.jpg)](https://www.youtube.com/watch?v=유튜브_영상_아이디)
+* **상세 발표 자료 (Google Drive)**: [미니프로젝트_김승원.pptx 바로가기](https://docs.google.com/presentation/d/1j5Di-CkP02YThjiQ7nPpfkwEprKaWgPj/edit?usp=sharing&ouid=113630341990529298262&rtpof=true&sd=true) 
+* **시연 영상**:
+
+[![Strike_90_Demo](http://img.youtube.com/vi/vxjFW06ClMk/0.jpg)](https://www.youtube.com/watch?v=vxjFW06ClMk)
+
   *이미지를 클릭하면 유튜브 시연 영상으로 이동합니다.*
 
 ---
